@@ -7,11 +7,14 @@ import logo from './images/logo2.jpg';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Spinner from './Essentials/Spinner';
+
 function App() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLogInClicked, setIsLogInClicked] = useState(false);
   const [isUserLogged, setIsUserLogged] = useState(false);
 
+  const [loadSpinner, setLoadSpinner] = useState(false);
   const [justLoggedIn, setJustLoggedIn] = useState(false);
   // const [userLoginDetails, setUserLoginDetails] = useState([]);
 
@@ -53,20 +56,36 @@ function App() {
         }
 
         {isUserLogged &&
-          <UserPage justLoggedIn={justLoggedIn} setJustLoggedIn={setJustLoggedIn} setIsUserLogged={setIsUserLogged} />
+          <UserPage
+            justLoggedIn={justLoggedIn}
+            setLoadSpinner={setLoadSpinner}
+            setJustLoggedIn={setJustLoggedIn}
+            setIsUserLogged={setIsUserLogged}
+          />
         }
       </div>
 
       <div className="login-signup">
         {isLogInClicked && !isSignUp && !isUserLogged &&
-          <Login handleSignUp={handleSignUp} setJustLoggedIn={setJustLoggedIn} setIsUserLogged={setIsUserLogged} setIsLogInClicked={setIsLogInClicked} />
+          <Login
+            handleSignUp={handleSignUp}
+            setLoadSpinner={setLoadSpinner}
+            setJustLoggedIn={setJustLoggedIn}
+            setIsUserLogged={setIsUserLogged}
+            setIsLogInClicked={setIsLogInClicked}
+          />
         }
 
         {isLogInClicked && isSignUp && !isUserLogged &&
-          <SignUp setIsSignUp={setIsSignUp} />
+          <SignUp
+            setIsSignUp={setIsSignUp}
+          />
         }
       </div>
       <ToastContainer />
+      {loadSpinner && (
+        <Spinner />
+      )}
     </div>
   );
 }

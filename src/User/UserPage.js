@@ -8,7 +8,8 @@ import Chatbot from '../chatbot/chatbot';
 import { toast } from 'react-toastify';
 import logoutIcon from '../images/user-logout.png';
 
-const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
+const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinner }) => {
+  const [changeProfileBtn, setChangeProfileBtn] = useState(false);
   const [isProfileSet, setIsProfileSet] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(true);
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -22,9 +23,9 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
     toast.dismiss();
     toast.info(
       <div>
-        <strong>Welcome {userName}</strong>
+        <strong>Welcome {userName}!</strong>
         <div style={{ fontSize: '0.8em', marginTop: '4px' }}>
-          Explore Tamil Nadu’s rich heritage right here!
+          Explore Tamil Nadu’s rich heritage right here...
         </div>
       </div>,
       {
@@ -35,7 +36,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
         draggable: true,
         icon: false,
         style: {
-            backgroundColor: "#0d47a1",
+            backgroundColor: "#0056b3",
             color: "#ebf4fe",
             borderRadius: "10px",
             fontSize: "0.95rem",
@@ -77,12 +78,10 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
     setViewProfile(false);
     setIsNavOpen(false);
     setIsChatOpen(false);
-    if(userProfile){
-      showWelcomeToast(userProfile.firstName);
-    }
   };
 
   const handleSetProfileClick = () => {
+    setChangeProfileBtn(true);
     setIsProfileSet(true);
     setDashboardOpen(false);
     setViewProfile(false);
@@ -94,7 +93,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
     setViewProfile(true);
     setIsChatOpen(false);
     setDashboardOpen(false);
-    //setIsProfileSet(false);
+    setIsProfileSet(false);
     setIsNavOpen(false);
   };
 
@@ -126,7 +125,10 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
           if (response.ok) {
             const data = await response.json();
             setUserProfile(data);
-            showWelcomeToast(data.firstName);
+
+            if (justLoggedIn) {
+              showWelcomeToast(data.firstName);
+            }
           } else {
             localStorage.removeItem('token');
             setIsUserLogged(false);
@@ -158,7 +160,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
       <div className={`nav-board ${isNavOpen ? 'open' : ''}`}>
         <ul className="items">
           <li><button className="item-btn" onClick={handleDashboardClick}>Dashboard</button></li>
-          {!isProfileSet ? (
+          {!changeProfileBtn ? (
             <li><button className="item-btn" onClick={handleSetProfileClick}>Set Your Profile</button></li>
           ) : (
             <li><button className="item-btn" onClick={handleViewProfileClick}>View Profile</button></li>
@@ -184,13 +186,16 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged }) => {
           />
         }
 
-        {dashboardOpen && <UserDashBoard />}
+        {dashboardOpen &&
+          <UserDashBoard />
+        }
 
         {viewProfile &&
           <ViewProfile
             setProfileSet={setIsProfileSet}
             setViewProfile={setViewProfile}
             profileUpdated={profileUpdated}
+            setLoadSpinner={setLoadSpinner}
             token={token}
           />
         }

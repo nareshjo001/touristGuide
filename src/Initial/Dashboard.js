@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [heritagePlaces, setHeritagePlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect (() => {
     const fetchPlaces = async () => {
@@ -30,13 +30,27 @@ const Dashboard = () => {
   }, []);
 
   const getFilteredPlaces = () => {
-    if (filter === 'default') {
-      return heritagePlaces;
-    } else if (filter === 'District') {
-      return Object.entries(filterByDistricts(heritagePlaces));
-    } else {
-      return heritagePlaces.filter(place => place.type === filter);
+    let filtered = heritagePlaces;
+
+    if (filter === 'District') {
+      const grouped = filterByDistricts(filtered);
+      return Object.entries(grouped).map(([district, places]) => [
+        district,
+        places.filter(place =>
+          place.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+        ),
+      ]).filter(([_, places]) => places.length > 0);
+    } else if (filter !== 'default') {
+      filtered = filtered.filter(place => place.type === filter);
     }
+
+    if (searchQuery) {
+      filtered = filtered.filter(place =>
+        place.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    }
+
+    return filtered;
   };
 
   const filteredPlaces = getFilteredPlaces();
@@ -52,7 +66,13 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-header">
         <h3>Heritage Places</h3>
-        <input type="text" placeholder="Search Places" />
+        <input
+          type="text"
+          className="search"
+          placeholder="Search Places"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       <div className="dashboard-filter">

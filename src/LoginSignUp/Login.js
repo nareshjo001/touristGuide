@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./LoginSignUp.css";
 import { toast } from 'react-toastify';
 import back from '../images/left-arrow.png';
@@ -8,6 +8,7 @@ const Login = ({
   setIsUserLogged,
   // userLoginDetails,
   setJustLoggedIn,
+  setLoadSpinner,
   setIsLogInClicked
 }) => {
 
@@ -15,6 +16,8 @@ const Login = ({
     email: "",
     securityPin: ""
   })
+
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleChange = (e) => {
     setEnteredLoginInfo({...enteredLoginInfo, [e.target.name]: e.target.value});
@@ -83,17 +86,33 @@ const Login = ({
         // Storing the token and user ID from the backend response
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data._id);
-        setJustLoggedIn(true);
-        setIsUserLogged(true);
-        setIsLogInClicked(false);
+
+        setLoadSpinner(true);
+        setLoginSuccess(true);
+
       } else {
         logInErrorToast();
       }
-    }catch (error) {
+    } catch (error) {
       console.error('Login error: ', error);
       logInErrorToast();
     }
   };
+
+   useEffect(() => {
+    let timer;
+
+    if (loginSuccess) {
+      timer = setTimeout(() => {
+        setLoadSpinner(false);
+        setJustLoggedIn(true);
+        setIsUserLogged(true);
+        setIsLogInClicked(false);
+      }, 3000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [loginSuccess, setLoadSpinner, setIsUserLogged, setJustLoggedIn, setIsLogInClicked]);
 
   return (
     <div className="login-container">
