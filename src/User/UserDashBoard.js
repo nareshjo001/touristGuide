@@ -1,7 +1,7 @@
 import React from 'react';
 import banner from '../images/heritage4.jpg';
 
-import Placecard from '../Initial/Placecard';
+import RecentlyVisited from './RecentlyVisited';
 import heritagePlaces from '../Essentials/HeritagePlaces';
 
 import Slider from 'react-slick';
@@ -71,7 +71,7 @@ const UserDashBoard = () => {
             <div className="user-dashboard-main">
                 <Slider {...settings}>
                     {heritagePlaces.map((place, index) => (
-                        <Placecard key={index} place={place} />
+                        <RecentlyVisited key={index} place={place} />
                     ))}
                 </Slider>
             </div>

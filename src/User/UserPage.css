@@ -197,17 +197,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   max-width: 250px;
-  height: 300px;
+  max-height: auto;
   background: #fff;
   border: 2px solid rgba(0, 102, 255, 0.3);
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px 3px rgba(0, 0, 0, 0.3);
   padding: 10px;
   transition: transform 0.2s ease-in-out;
 }
-
 
 .user-dashboard-main .place-card:hover {
     transform: scale(1.02);
@@ -224,12 +222,27 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: -10px;
 }
 
-.name-location h3,
-.name-location h4 {
-  margin: 5px 0;
-  text-align: center;
+.user-dashboard-main .place-card .name-location .place-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #0056b3;
+}
+
+.user-dashboard-main .place-loc {
+    margin-top: -10px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.user-dashboard-main .place-description {
+    font-size: 0.85rem;
+    margin-top: 3px;
+    line-height: 1.25;
+    color: #242124;
+    text-align: center;
 }
 
 /*Set Your Profile*/
