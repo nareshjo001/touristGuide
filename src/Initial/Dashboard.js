@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import heritagePlaces from '../Essentials/HeritagePlaces';
+// import heritagePlaces from '../Essentials/HeritagePlaces';
 import Placecard from './Placecard';
 import filterByDistricts from '../Essentials/essentials';
 import './Dashboard.css';
+
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   const [filter, setFilter] = useState('default');
@@ -64,26 +66,34 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+
       <div className="dashboard-header">
         <h3>Heritage Places</h3>
-        <input
+
+        <div className="filters">
+          <input
           type="text"
           className="search"
           placeholder="Search Places"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-        />
+          />
+          <div className="dashboard-filter">
+            <select className="filter-by" id="filter-by" onChange={(e) => setFilter(e.target.value)}>
+              <option value="default">Filter By</option>
+              <option value="District">Districts</option>
+              <option value="Temple">Temples</option>
+              <option value="Palace">Palaces</option>
+              <option value="Memorial">Memorials</option>
+            </select>
+          </div>
+        </div>
+
       </div>
 
-      <div className="dashboard-filter">
-        <select className="filter-by" id="filter-by" onChange={(e) => setFilter(e.target.value)}>
-          <option value="default">Filter By</option>
-          <option value="District">Districts</option>
-          <option value="Temple">Temples</option>
-          <option value="Palace">Palaces</option>
-          <option value="Memorial">Memorials</option>
-        </select>
-      </div>
+      { filter !== 'District' && filter !== 'default' &&
+        <h3 className="filtered-text">Filtered by {filter}</h3>
+      }
 
       <div className="dashboard-main">
         {filter === 'District' ? (
@@ -91,15 +101,37 @@ const Dashboard = () => {
             <div key={district} className="district-group">
               <h3 className="district-heading">{district}</h3>
               <div className="district-places">
-                {groupList.map((place) => (
-                  <Placecard key={place.name} place={place} />
+                {groupList.map((place, index) => (
+                  <motion.div
+                    key={place.name}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.1,
+                      ease: [0.25, 1, 0.5, 1]
+                    }}
+                  >
+                    <Placecard place={place} />
+                  </motion.div>
                 ))}
               </div>
             </div>
           ))
         ) : (
-          filteredPlaces.map((place) => (
-            <Placecard key={place.name} place={place} />
+          filteredPlaces.map((place, index) => (
+            <motion.div
+              key={place.name}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: index * 0.1,
+                ease: [0.25, 1, 0.5, 1]
+              }}
+            >
+              <Placecard place={place} />
+            </motion.div>
           ))
         )}
       </div>
