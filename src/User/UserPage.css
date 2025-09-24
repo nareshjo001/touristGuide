@@ -3,6 +3,7 @@ body {
   background: linear-gradient(135deg, #d7eafc, #ffffff);
 }
 
+/* Hamburger Menu CSS */
 .menu {
   margin: 10px;
   border: none;
@@ -30,6 +31,7 @@ body {
   z-index: 5;
 }
 
+/* Navgation Board CSS */
 .nav-board {
   position: fixed;
   top: 120px;
@@ -96,7 +98,6 @@ body {
 }
 
 /*User DashBoard*/
-
 .user-dashboard {
   display: flex;
   flex-direction: column;
@@ -193,6 +194,7 @@ body {
   50% { opacity: 1; }
 }
 
+/* Recently Visited Places CSS */
 .user-dashboard-main .place-card {
   display: flex;
   flex-direction: column;
@@ -246,7 +248,6 @@ body {
 }
 
 /*Set Your Profile*/
-
 .container {
     display: flex;
     flex-direction: column;
@@ -321,7 +322,6 @@ textarea {
 }
 
 /* View Your Profile */
-
 .profile-card {
   width: 360px;
   margin: 0 auto;
@@ -400,33 +400,65 @@ textarea {
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  overflow: hidden;
+  height: calc(100vh - 70px);
 }
 
 /* Chatbot left panel */
 .chatbot-left {
   flex: 1;
+  max-width: 420px;
   background: #f6f2ff;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
+  min-height: 400px;
+  max-height: 100%;
 }
 
 /* Info right panel */
 .info-right {
   flex: 1;
-  background: #ebf4fe;
+  width: 100%;
   border-radius: 10px;
+  overflow: hidden;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Curtain image */
+.info-right .info-bg {
+  width: 100%;
+  max-height: 115px;
+  overflow: hidden;
+}
+
+.info-right .info-bg-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* AI content below */
+.info-right .info-content {
   padding: 20px;
+  background: #ffffff;
+  color: #000;
   overflow-y: auto;
 }
 
+.info-right h2 {
+  margin-bottom: 15px;
+}
 
+.info-right p,
+.info-right ul {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
 
-
-
-
-
-
+.info-right li {
+  margin-bottom: 10px;
+}

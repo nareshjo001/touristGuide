@@ -4,47 +4,7 @@ body {
   height: 100vh;
 }
 
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background-color: #0056b3;
-  box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-  padding: 1rem;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.header button {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.header .header-text {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ebf4fe;
-}
-
-.header button:hover {
-  scale: 1.1;
-}
-
-.logo-img {
-  width: 75px;
-  height: 75px;
-  object-fit: cover;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0, 102, 255, 0.3);
-}
-
+/*Login SignUp Container CSS*/
 .login-signup {
   margin: 33px;
   display: flex;
@@ -214,58 +174,3 @@ input[type="submit"]:hover,
     opacity: 1;
   }
 }
-
-@media (max-width: 600px) {
-  body {
-    padding: 1rem;
-  }
-
-  .login-container,
-  .signup-container {
-    width: 90%;
-    max-width: 300px;
-    padding: 1.5rem 1rem;
-    box-shadow: 0 0 8px rgba(0, 102, 255, 0.4);
-  }
-
-  .logo-img {
-    width: 120px;
-    height: 120px;
-  }
-
-  .head h2 {
-    font-size: 1.5rem;
-  }
-
-  .head p {
-    font-size: 0.9rem;
-  }
-
-  input[type="text"],
-  input[type="password"],
-  input[type="tel"],
-  input[type="email"] {
-    font-size: 0.85rem;
-    padding: 0.6rem;
-    width: 100%;
-  }
-
-  input[type="submit"] {
-    width: 100%;
-    font-size: 0.95rem;
-    border-radius: 10px;
-  }
-
-  .foot {
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-
-  .foot button {
-    width: 80%;
-    border-radius: 10px;
-    font-size: 0.9rem;
-  }
-}
-
-

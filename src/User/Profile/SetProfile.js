@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token }) => {
+
+    // State to hold profile fields
     const [profile, setProfile] = useState({
         firstName: "",
         lastName: "",
@@ -13,9 +15,11 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
         interests: ""
     });
 
+    // Fetch existing user and profile data when component mounts or token changes
     useEffect(() => {
         const fetchUserData = async () => {
             try {
+                // Fetch basic user info
                 const userResponse = await fetch('http://localhost:5000/api/users/profile', {
                     method: 'GET',
                     headers: {
@@ -24,7 +28,7 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
                 });
 
                 const userData = await userResponse.json();
-                
+
                 // Fetch additional profile data
                 const profileResponse = await fetch('http://localhost:5000/api/profile', {
                     method: 'GET',
@@ -35,6 +39,7 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
 
                 if (profileResponse.ok) {
                     const profileData = await profileResponse.json();
+                    // Merge user data and profile data into state
                     setProfile({
                         firstName: userData.firstName,
                         lastName: userData.lastName,
@@ -67,6 +72,7 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
         }
     }, [token]);
 
+    // Toast to show success message after profile update
     const SuccessToast = () => {
         toast.dismiss();
         toast.success(
@@ -93,10 +99,12 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
         );
     };
 
+    // Handle input changes and update state
     const handleChange = (e) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
     };
 
+    // Save profile data to backend
     const handleSave = async (e) => {
         e.preventDefault();
         try {
@@ -130,6 +138,8 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
     return (
         <div className="container">
             <h2>Personalize Your Profile</h2>
+
+            {/* Profile edit form */}
             <form className="setprofile-container" onSubmit={handleSave}>
                 <div className="form-grid">
                     <input name="firstName" value={profile.firstName} onChange={handleChange} placeholder="First Name" disabled />

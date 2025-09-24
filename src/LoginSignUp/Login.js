@@ -6,32 +6,27 @@ import back from '../images/left-arrow.png';
 const Login = ({
   handleSignUp,
   setIsUserLogged,
-  // userLoginDetails,
   setJustLoggedIn,
   setLoadSpinner,
   setIsLogInClicked
 }) => {
 
+  // State to store user input for email and PIN
   const [enteredLoginInfo, setEnteredLoginInfo] = useState({
     email: "",
     securityPin: ""
   })
 
+  // State to track successful login
   const [loginSuccess, setLoginSuccess] = useState(false);
 
+  // Update state on input change
   const handleChange = (e) => {
     setEnteredLoginInfo({...enteredLoginInfo, [e.target.name]: e.target.value});
   }
 
-  // const validate = () => {
-  //   return userLoginDetails.some(
-  //     detail =>
-  //       detail.firstName === enteredLoginInfo.email &&
-  //       detail.password === enteredLoginInfo.securityPin
-  //   );
-  // };
-
-    const logInErrorToast = () => {
+  // Show toast notification for login error
+  const logInErrorToast = () => {
       toast.dismiss();
       toast.error(
         <div>
@@ -57,17 +52,10 @@ const Login = ({
       );
     };
 
+  // Handle form submission and API call
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const validationResult = validate();
 
-    // if (validationResult) {
-    //   setJustLoggedIn(true);
-    //   setIsUserLogged(true);
-    //   setIsLogInClicked(false);
-    // } else {
-    //   logInErrorToast();
-    // }
     try {
       const response = await fetch('http://localhost:5000/api/users/login',{
         method:'POST',
@@ -81,7 +69,7 @@ const Login = ({
       });
 
       const data = await response.json();
-      
+
       if(response.ok) {
         // Storing the token and user ID from the backend response
         localStorage.setItem('token', data.token);
@@ -99,10 +87,12 @@ const Login = ({
     }
   };
 
-   useEffect(() => {
+  // Effect to handle post-login actions after success
+  useEffect(() => {
     let timer;
 
     if (loginSuccess) {
+      // Delay state updates to allow spinner animation
       timer = setTimeout(() => {
         setLoadSpinner(false);
         setJustLoggedIn(true);
@@ -116,6 +106,7 @@ const Login = ({
 
   return (
     <div className="login-container">
+      {/* Header with back button and title */}
       <header>
         <div className="head">
           <div className="backBtn-h2">
@@ -126,6 +117,7 @@ const Login = ({
         </div>
       </header>
 
+      {/* Main login form */}
       <main>
         <div className="login">
           <form onSubmit={handleSubmit}>
@@ -148,6 +140,7 @@ const Login = ({
         </div>
       </main>
 
+      {/* Footer to enable sign up */}
       <footer className="foot">
         <p>Don't have an account ? </p>
         <button onClick={ handleSignUp }>Sign Up</button>

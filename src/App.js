@@ -86,6 +86,18 @@ function App() {
       {loadSpinner && (
         <Spinner />
       )}
+      {!isUserLogged &&
+        <div className="logged-out-footer">
+          <div className="logo-brand-git">
+            <div className="brand-logo">
+              <i class="fa-solid fa-gopuram"></i>
+              <p>Thamizh Thadam</p>
+            </div>
+          <a href="https://github.com/nareshjo001/touristGuide"><i className="fa-brands fa-github"></i></a>
+          </div>
+          <p>THAMIZH THADAM Copyright &copy; {new Date().getFullYear()} Thamizh Thadam - All rights reserved.</p>
+        </div>
+      }
     </div>
   );
 }

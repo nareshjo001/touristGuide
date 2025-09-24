@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import logoutIcon from '../images/user-logout.png';
 
 const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinner }) => {
+  // State to manage profile navigation, dashboard, chat, and user info
   const [changeProfileBtn, setChangeProfileBtn] = useState(false);
   const [isProfileSet, setIsProfileSet] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(true);
@@ -17,8 +18,12 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
   const [userProfile, setUserProfile] = useState(null);
   const [profileUpdated, setProfileUpdated] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const token = localStorage.getItem('token'); // Correct location
 
+  const [aiData, setAiData] = useState('');
+
+  const token = localStorage.getItem('token'); // JWT token for API calls
+
+  // Show welcome toast on first login
   const showWelcomeToast = (userName) => {
     toast.dismiss();
     toast.info(
@@ -46,6 +51,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     );
   };
 
+  // Show toast for successful logout
   const logOutSuccessToast = () => {
       toast.dismiss();
       toast.success(
@@ -72,6 +78,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     );
   };
 
+  // Navigation handlers
   const handleDashboardClick = () => {
     setDashboardOpen(true);
     setIsProfileSet(false);
@@ -98,7 +105,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
   };
 
   const handleLogoutClick = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token'); // Clear token on logout
     setIsUserLogged(false);
     logOutSuccessToast();
   }
@@ -111,6 +118,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     setDashboardOpen(false);
   }
 
+  // Fetch user profile on component mount or token change
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (token) {
@@ -151,12 +159,16 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
 
   return (
     <div className="userpage">
+
+      {/* Hamburger menu button */}
       <button className="menu" onClick={() => setIsNavOpen(!isNavOpen)}>
         <img src={menu} alt="hamburger-menu" />
       </button>
 
+      {/* Backdrop when nav is open */}
       {isNavOpen && <div className="backdrop" onClick={() => setIsNavOpen(false)}></div>}
 
+      {/* Side navigation panel */}
       <div className={`nav-board ${isNavOpen ? 'open' : ''}`}>
         <ul className="items">
           <li><button className="item-btn" onClick={handleDashboardClick}>Dashboard</button></li>
@@ -169,14 +181,18 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
           <li><button className="item-btn">Nearby Places</button></li>
           <li><button className="item-btn">Wish List</button></li>
         </ul>
+
+        {/* Logout button */}
         <div className="logout-btn-icon">
           <button className="logout-btn item-btn" onClick={handleLogoutClick}>Log Out</button>
           <img src={logoutIcon} alt="logout-icon"/>
         </div>
       </div>
 
+      {/* Main content area */}
       <div className="user-page-main">
 
+        {/* Render profile setup form */}
         {isProfileSet &&
           <SetProfile
             setProfileSet={setIsProfileSet}
@@ -186,10 +202,12 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
           />
         }
 
+        {/* Render user dashboard */}
         {dashboardOpen &&
           <UserDashBoard />
         }
 
+        {/* Render view profile */}
         {viewProfile &&
           <ViewProfile
             setProfileSet={setIsProfileSet}
@@ -201,21 +219,57 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
         }
       </div>
 
+      {/* Split section for chatbot and info */}
       <div className="user-page-main-split">
         {/* Left: Chatbot */}
         {isChatOpen && (
           <div className="chatbot-left">
-            <Chatbot />
+            <Chatbot setAiData={setAiData} />
           </div>
         )}
 
         {/* Right: Info Section */}
-        {isChatOpen && (
-          <div className="info-right">
-            <h2>Info Section Placeholder</h2>
-            <p>This section will display relevant information here.</p>
+        <div className="info-right">
+          {/* Top curtain image */}
+          <div className="info-bg">
+            <img 
+              src={require('../images/curtain2.jpg')} 
+              alt="Curtain Background" 
+              className="info-bg-img" 
+            />
+          </div>
+
+          {/* AI content below the curtain */}
+          <div className="info-content">
+            {aiData ? (
+              <div>
+                <h2>{aiData.place}</h2>
+
+                {aiData.overviewContent && <p>{aiData.overviewContent}</p>}
+
+                {aiData.history && (
+                  <ul>
+                    {aiData.history.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {aiData.festivals && (
+                  <ul>
+                    {aiData.festivals.map((f, index) => (
+                      <li key={index}>
+                        <strong>{f.name}</strong> ({f.period}): {f.description}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ) : (
+              <p>Ask about Overview, History, or Festivals to see details here.</p>
+            )}
+          </div>
         </div>
-        )}
       </div>
     </div>
   );

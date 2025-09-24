@@ -1,11 +1,4 @@
 /* Wrapper to center spinner */
-/* .spinner-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
-} */
-
 .spinner-wrapper {
   position: fixed;
   top: 0;

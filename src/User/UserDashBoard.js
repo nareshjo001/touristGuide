@@ -1,50 +1,14 @@
 import React from 'react';
 import banner from '../images/heritage4.jpg';
-
 import RecentlyVisited from './RecentlyVisited';
 import heritagePlaces from '../Essentials/HeritagePlaces';
-
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const UserDashBoard = () => {
 
-    /*const recentlyvisited = [
-        {
-            name: "Brihadeeswarar Temple",
-            location: "Thanjavur",
-            district: "Thanjavur",
-            type: "Temple",
-            imageUrl: brihadeeswarar,
-            description: "A UNESCO World Heritage Site built by Raja Raja Chola I, famous for its massive vimana and intricate stone carvings."
-        },
-        {
-            name: "Meenakshi Amman Temple",
-            location: "Madurai",
-            district: "Madurai",
-            type: "Temple",
-            imageUrl: meenakshi,
-            description: "An iconic temple dedicated to Goddess Meenakshi, known for its towering gopurams and vibrant sculptures."
-        },
-        {
-            name: "Thiruvalluvar Statue",
-            location: "Kanyakumari",
-            district: "Kanyakumari",
-            type: "Memorial",
-            imageUrl: valluvar,
-            description: "A 133-feet tall statue of the Tamil poet-saint, symbolizing his contribution to Tamil literature."
-        },
-        {
-            name: "Brihadeeswarar Temple",
-            location: "Thanjavur",
-            district: "Thanjavur",
-            type: "Temple",
-            imageUrl: brihadeeswarar,
-            description: "A UNESCO World Heritage Site built by Raja Raja Chola I, famous for its massive vimana and intricate stone carvings."
-        }
-    ]*/
-
+    // Settings for react-slick carousel
     const settings = {
         dots: true,
         infinite: false,
@@ -56,6 +20,8 @@ const UserDashBoard = () => {
 
     return (
         <div className="user-dashboard">
+
+            {/* Hero banner section with site slogan and info */}
             <div className="hero-section">
                 <img src={banner} alt="site-banner" />
                 <p className="slogan">Uncover the history behind every stone.</p>
@@ -66,6 +32,7 @@ const UserDashBoard = () => {
                 </div>
             </div>
 
+            {/* Recently Visited section */}
             <h3>Recently Visited</h3>
             <p className="swipe-hint">← Swipe to see more →</p>
             <div className="user-dashboard-main">

@@ -3,6 +3,7 @@ body {
   background: linear-gradient(135deg, #d7eafc, #ffffff);
 }
 
+/* Dashboard CSS */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -44,7 +45,7 @@ body {
   text-align: center;
 }
 
-/* Card Styles */
+/* Place Card CSS */
 .dashboard-main {
     display: flex;
     flex-wrap: wrap;
@@ -178,5 +179,24 @@ body {
   gap: 15px;
 }
 
+/* Pagination CSS */
+.pagination-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 8px;
+}
 
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
+.dot.active {
+  background-color: #007bff;
+  transform: scale(1.2);
+}

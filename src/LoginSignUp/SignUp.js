@@ -5,6 +5,7 @@ import back from '../images/left-arrow.png';
 
 const SignUp = ({setIsSignUp}) => {
 
+    // State to store user input for signup
     const [enteredUserInfo, setEnteredUserInfo] = useState({
         firstName:"",
         lastName:"",
@@ -12,6 +13,7 @@ const SignUp = ({setIsSignUp}) => {
         password:""
     })
 
+    // Toast for successful signup
     const signUpSuccessToast = () => {
         toast.dismiss();
         toast.success(
@@ -38,6 +40,7 @@ const SignUp = ({setIsSignUp}) => {
         );
     };
 
+    // Toast for signup error (e.g., user already exists)
     const signUpErrorToast = () => {
         toast.dismiss();
         toast.error(
@@ -64,10 +67,12 @@ const SignUp = ({setIsSignUp}) => {
         );
     };
 
+    // Update state on input change
     const handleChange = (e) => {
         setEnteredUserInfo({...enteredUserInfo, [e.target.name]: e.target.value});
     }
 
+    // Handle form submission and API call
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -84,7 +89,7 @@ const SignUp = ({setIsSignUp}) => {
                     securityPin: enteredUserInfo.password, // Corrected key from 'password' to 'securityPin'
                 }),
             });
-            const data = await response.json();
+            // const data = await response.json();
 
             if(response.ok){
                 signUpSuccessToast();
@@ -96,25 +101,11 @@ const SignUp = ({setIsSignUp}) => {
             console.error('SignUp Error: ', error);
             signUpErrorToast();
         }
-        // const userExists = userLoginDetails.some(
-        //     (user) => user.email === enteredUserInfo.email
-        // );
-
-        // if (userExists) {
-        //     signUpErrorToast();
-        // } else {
-        //     setUserLoginDetails((prev) => [...prev, enteredUserInfo]);
-        //     signUpSuccessToast();
-        //     setIsSignUp(false);
-        // }
     }
-
-    // useEffect(() => {
-    //     localStorage.setItem("userLoggedtails", JSON.stringify(userLoginDetails));
-    // }, [userLoginDetails]);
 
     return (
         <div className="signup-container">
+            {/* Header with back button and title */}
             <header>
                 <div className="head">
                     <div className="backBtn-h2">
@@ -122,9 +113,10 @@ const SignUp = ({setIsSignUp}) => {
                         <h2>Sign Up</h2>
                     </div>
                     <p>Create your account securely</p>
-        </div>
+                </div>
             </header>
 
+            {/* Main signup form */}
             <main>
                 <div className="signup">
                     <form onSubmit={handleSubmit}>
@@ -155,7 +147,7 @@ const SignUp = ({setIsSignUp}) => {
                         onChange={handleChange}
                         required
                         />
-                        
+
                         <input
                         type="password"
                         name="password"
