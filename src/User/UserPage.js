@@ -7,6 +7,8 @@ import ViewProfile from './Profile/ViewProfile';
 import Chatbot from '../chatbot/chatbot';
 import { toast } from 'react-toastify';
 import logoutIcon from '../images/user-logout.png';
+import TypingEffect from '../Essentials/Typingeffect';
+import SequentialTypingList from '../Essentials/SequentialTypingList';
 
 const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinner }) => {
   // State to manage profile navigation, dashboard, chat, and user info
@@ -179,7 +181,6 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
           )}
           <li><button className="item-btn" onClick={handleChatClick}>AI Assistant</button></li>
           <li><button className="item-btn">Nearby Places</button></li>
-          <li><button className="item-btn">Wish List</button></li>
         </ul>
 
         {/* Logout button */}
@@ -220,57 +221,49 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
       </div>
 
       {/* Split section for chatbot and info */}
+      { isChatOpen &&
       <div className="user-page-main-split">
-        {/* Left: Chatbot */}
-        {isChatOpen && (
-          <div className="chatbot-left">
-            <Chatbot setAiData={setAiData} />
-          </div>
-        )}
+        <div className="chatbot-left"> {/* Left: Chatbot */}
+          <Chatbot setAiData={setAiData} />
+        </div>
 
-        {/* Right: Info Section */}
-        <div className="info-right">
-          {/* Top curtain image */}
-          <div className="info-bg">
-            <img 
-              src={require('../images/curtain2.jpg')} 
-              alt="Curtain Background" 
-              className="info-bg-img" 
+        <div className="info-right"> {/* Right: Info Section */}
+          <div className="info-bg"> {/* Top curtain image */}
+            <img
+              src={require('../images/curtain2.jpg')}
+              alt="Curtain Background"
+              className="info-bg-img"
             />
           </div>
 
-          {/* AI content below the curtain */}
-          <div className="info-content">
+          <div className="info-content"> {/* AI content below the curtain */}
             {aiData ? (
               <div>
-                <h2>{aiData.place}</h2>
+                <TypingEffect text={aiData.place} speed={30} />
 
-                {aiData.overviewContent && <p>{aiData.overviewContent}</p>}
-
-                {aiData.history && (
-                  <ul>
-                    {aiData.history.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
+                {aiData.overviewContent && (
+                  <TypingEffect text={aiData.overviewContent} speed={30} />
                 )}
 
+                {aiData.history && <SequentialTypingList items={aiData.history} />}
+
                 {aiData.festivals && (
-                  <ul>
-                    {aiData.festivals.map((f, index) => (
-                      <li key={index}>
-                        <strong>{f.name}</strong> ({f.period}): {f.description}
-                      </li>
-                    ))}
-                  </ul>
+                  <SequentialTypingList
+                    items={aiData.festivals.map(
+                      (f) => `${f.name} (${f.period}): ${f.description}`
+                    )}
+                  />
                 )}
               </div>
             ) : (
-              <p>Ask about Overview, History, or Festivals to see details here.</p>
+              <TypingEffect
+                text={"Ask about Overview, History, or Festivals to see details here."}
+                speed={30}
+              />
             )}
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

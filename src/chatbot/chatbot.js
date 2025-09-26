@@ -8,12 +8,7 @@ const Chatbot = ({ setAiData }) => {
   // Should be replaced by useState and content updated dyanmically based on AI fetched data
   const overview = {
     place : "Big Temple",
-    overviewContent: `The Brihadeeswarar Temple, also known as the Big Temple, is located in Thanjavur, Tamil Nadu,
-    and was built by Raja Raja Chola I in 1010 CE. Dedicated to Lord Shiva, it is a masterpiece of Dravidian architecture
-    and a UNESCO World Heritage Site as part of the Great Living Chola Temples. The temple is famous for its towering vimana,
-    which stands about 66 meters tall and is made entirely of granite, including an 80-ton capstone. Its walls are adorned with intricate carvings
-    and frescoes depicting Shiva, Hindu epics, and Chola-era life. The temple also features a large tank used for rituals and
-    hosts grand festivals like Maha Shivaratri, making it both a spiritual center and a cultural landmark.`
+    overviewContent: `The Brihadeeswarar Temple, also known as the Big Temple, is located in Thanjavur, Tamil Nadu, and was built by Raja Raja Chola I in 1010 CE. Dedicated to Lord Shiva, it is a masterpiece of Dravidian architecture and a UNESCO World Heritage Site as part of the Great Living Chola Temples. The temple is famous for its towering vimana, which stands about 66 meters tall and is made entirely of granite, including an 80-ton capstone. Its walls are adorned with intricate carvings and frescoes depicting Shiva, Hindu epics, and Chola-era life. The temple also features a large tank used for rituals and hosts grand festivals like Maha Shivaratri, making it both a spiritual center and a cultural landmark.`
   }
 
   // Should be replaced by useState and content updated dyanmically based on AI fetched data

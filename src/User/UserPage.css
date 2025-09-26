@@ -422,6 +422,7 @@ textarea {
   width: 100%;
   border-radius: 10px;
   overflow: hidden;
+  background: white;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
@@ -444,7 +445,7 @@ textarea {
 /* AI content below */
 .info-right .info-content {
   padding: 20px;
-  background: #ffffff;
+  background: white;
   color: #000;
   overflow-y: auto;
 }
