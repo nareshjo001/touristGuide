@@ -4,7 +4,7 @@ import './UserPage.css';
 import UserDashBoard from './UserDashBoard';
 import SetProfile from './Profile/SetProfile';
 import ViewProfile from './Profile/ViewProfile';
-import Chatbot from '../chatbot/chatbot'; // Corrected import path
+import Chatbot from '../chatbot/chatbot';
 import { toast } from 'react-toastify';
 import logoutIcon from '../images/user-logout.png';
 import TypingEffect from '../Essentials/Typingeffect';
@@ -26,7 +26,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
 
   const token = localStorage.getItem('token'); // JWT token for API calls
 
-  // ... (all your functions like showWelcomeToast, logOutSuccessToast, handlers... no changes needed) ...
+  // ... (all your functions like showWelcomeToast, logOutSuccessToast, handlers... are fine) ...
   // Show welcome toast on first login
   const showWelcomeToast = (userName) => {
     toast.dismiss();
@@ -160,7 +160,6 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
       setJustLoggedIn(false);
     }
   }, [justLoggedIn, setIsUserLogged, token]);
-
 
   return (
     <div className="userpage">

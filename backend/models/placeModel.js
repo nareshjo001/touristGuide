@@ -7,6 +7,7 @@ const placeSchema = new mongoose.Schema({
     type: { type: String, required: true },
     imageUrl: { type: String, required: true },
     description: { type: String, required: true },
+    related_places: [String]
 });
 
 module.exports = mongoose.model('Place', placeSchema);
