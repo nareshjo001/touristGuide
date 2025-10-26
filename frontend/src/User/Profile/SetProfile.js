@@ -20,7 +20,7 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
         const fetchUserData = async () => {
             try {
                 // Fetch basic user info
-                const userResponse = await fetch('http://localhost:5000/api/users/profile', {
+                const userResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -30,7 +30,7 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
                 const userData = await userResponse.json();
 
                 // Fetch additional profile data
-                const profileResponse = await fetch('http://localhost:5000/api/profile', {
+                const profileResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/profile`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -108,7 +108,7 @@ const SetProfile = ({ setProfileSet, setViewProfile, setProfileUpdated, token })
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/profile', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/profile`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

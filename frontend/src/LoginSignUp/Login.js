@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./LoginSignUp.css";
 import { toast } from 'react-toastify';
 import back from '../images/left-arrow.png';
+import { AuthContext } from '../context/AuthContext.js';
 
 const Login = ({
   handleSignUp,
@@ -11,6 +12,7 @@ const Login = ({
   setIsLogInClicked
 }) => {
 
+  const { login } = useContext(AuthContext);
   // State to store user input for email and PIN
   const [enteredLoginInfo, setEnteredLoginInfo] = useState({
     email: "",
@@ -57,7 +59,7 @@ const Login = ({
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/login',{
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/login`,{
         method:'POST',
         headers: {
           'Content-Type' : 'application/json',
@@ -74,6 +76,9 @@ const Login = ({
         // Storing the token and user ID from the backend response
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data._id);
+
+        // Update the global AuthContext state immediately 
+        login(data);
 
         setLoadSpinner(true);
         setLoginSuccess(true);

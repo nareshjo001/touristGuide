@@ -4,7 +4,7 @@ import './UserPage.css';
 import UserDashBoard from './UserDashBoard';
 import SetProfile from './Profile/SetProfile';
 import ViewProfile from './Profile/ViewProfile';
-import Chatbot from '../chatbot/chatbot';
+import Chatbot from '../chatbot/chatbot'; // Corrected import path
 import { toast } from 'react-toastify';
 import logoutIcon from '../images/user-logout.png';
 import TypingEffect from '../Essentials/Typingeffect';
@@ -21,10 +21,12 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
   const [profileUpdated, setProfileUpdated] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const [aiData, setAiData] = useState('');
+  // This state is correct
+  const [aiData, setAiData] = useState([]); 
 
   const token = localStorage.getItem('token'); // JWT token for API calls
 
+  // ... (all your functions like showWelcomeToast, logOutSuccessToast, handlers... no changes needed) ...
   // Show welcome toast on first login
   const showWelcomeToast = (userName) => {
     toast.dismiss();
@@ -125,7 +127,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     const fetchUserProfile = async () => {
       if (token) {
         try {
-          const response = await fetch('http://localhost:5000/api/users/profile', {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -159,18 +161,14 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     }
   }, [justLoggedIn, setIsUserLogged, token]);
 
+
   return (
     <div className="userpage">
-
-      {/* Hamburger menu button */}
+      {/* ... (Your nav-board and other JSX is fine) ... */}
       <button className="menu" onClick={() => setIsNavOpen(!isNavOpen)}>
         <img src={menu} alt="hamburger-menu" />
       </button>
-
-      {/* Backdrop when nav is open */}
       {isNavOpen && <div className="backdrop" onClick={() => setIsNavOpen(false)}></div>}
-
-      {/* Side navigation panel */}
       <div className={`nav-board ${isNavOpen ? 'open' : ''}`}>
         <ul className="items">
           <li><button className="item-btn" onClick={handleDashboardClick}>Dashboard</button></li>
@@ -182,8 +180,6 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
           <li><button className="item-btn" onClick={handleChatClick}>AI Assistant</button></li>
           <li><button className="item-btn">Nearby Places</button></li>
         </ul>
-
-        {/* Logout button */}
         <div className="logout-btn-icon">
           <button className="logout-btn item-btn" onClick={handleLogoutClick}>Log Out</button>
           <img src={logoutIcon} alt="logout-icon"/>
@@ -192,8 +188,6 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
 
       {/* Main content area */}
       <div className="user-page-main">
-
-        {/* Render profile setup form */}
         {isProfileSet &&
           <SetProfile
             setProfileSet={setIsProfileSet}
@@ -202,13 +196,9 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
             token={token}
           />
         }
-
-        {/* Render user dashboard */}
         {dashboardOpen &&
           <UserDashBoard />
         }
-
-        {/* Render view profile */}
         {viewProfile &&
           <ViewProfile
             setProfileSet={setIsProfileSet}
@@ -236,32 +226,32 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
             />
           </div>
 
-          <div className="info-content"> {/* AI content below the curtain */}
-            {aiData ? (
-              <div>
-                <TypingEffect text={aiData.place} speed={30} />
-
-                {aiData.overviewContent && (
-                  <TypingEffect text={aiData.overviewContent} speed={30} />
-                )}
-
-                {aiData.history && <SequentialTypingList items={aiData.history} />}
-
-                {aiData.festivals && (
-                  <SequentialTypingList
-                    items={aiData.festivals.map(
-                      (f) => `${f.name} (${f.period}): ${f.description}`
-                    )}
-                  />
-                )}
-              </div>
+          {/* --- THIS IS THE CORRECTED JSX --- */}
+          <div className="info-content">
+            {/* Check if the ARRAY has items */}
+            {aiData && aiData.length > 0 ? (
+              // Map over the array of places
+              aiData.map((place) => (
+                <div key={place.id} style={{ marginBottom: '20px' }}>
+                  {/* Use TypingEffect for the place name */}
+                  <h3><TypingEffect text={place.name} speed={30} /></h3>
+                  
+                  {/* Display the full text */}
+                  {place.full_text && (
+                    <TypingEffect text={place.full_text} speed={20} />
+                  )}
+                </div>
+              ))
             ) : (
+              // This is the default message
               <TypingEffect
                 text={"Ask about Overview, History, or Festivals to see details here."}
                 speed={30}
               />
             )}
           </div>
+          {/* --- END OF CORRECTED JSX --- */}
+
         </div>
       </div>}
     </div>
