@@ -19,3 +19,4 @@ nest_asyncio
 numpy
 indic-nlp-library
 sacremoses
+pymongo
