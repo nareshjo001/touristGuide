@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Spinner from '../../Essentials/Spinner';
+// import Spinner from '../../Essentials/Spinner';
 
 const ViewProfile = ({ setProfileSet, setViewProfile, profileUpdated, token }) => {
 
@@ -16,7 +16,7 @@ const ViewProfile = ({ setProfileSet, setViewProfile, profileUpdated, token }) =
       const startTime = Date.now(); // Track fetch start time for consistent spinner
 
       try {
-        const response = await fetch('http://localhost:5000/api/profile', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/profile`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
