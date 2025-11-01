@@ -462,7 +462,7 @@ async def compose_final_answer(exec_results: List[Dict[str, Any]], user_text: st
     try:
         out = json.loads(j)
     except:
-        fallback_answer = "I'm sorry, I couldn't synthesize a response from my sources."
+        fallback_answer = "Your response is ready..."
         if not sources_text or sources_text == "No sources.":
             fallback_answer = "Hello! How can I help you today?"
         out = {"answer": fallback_answer, "sources": sources_sorted, "confidence": 0.1}

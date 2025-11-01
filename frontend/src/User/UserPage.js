@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import logoutIcon from '../images/user-logout.png';
 import TypingEffect from '../Essentials/Typingeffect';
 import SequentialTypingList from '../Essentials/SequentialTypingList';
+import RoutePage from '../routefinder/RoutePage';
 
 const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinner }) => {
   // State to manage profile navigation, dashboard, chat, and user info
@@ -20,9 +21,10 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
   const [userProfile, setUserProfile] = useState(null);
   const [profileUpdated, setProfileUpdated] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isRoutePlanOpen, setIsRoutePlanOpen] = useState(false);
 
   // This state is correct
-  const [aiData, setAiData] = useState([]); 
+  const [aiData, setAiData] = useState([]);
 
   const token = localStorage.getItem('token'); // JWT token for API calls
 
@@ -89,6 +91,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     setViewProfile(false);
     setIsNavOpen(false);
     setIsChatOpen(false);
+    setIsRoutePlanOpen(false);
   };
 
   const handleSetProfileClick = () => {
@@ -98,6 +101,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     setViewProfile(false);
     setIsNavOpen(false);
     setIsChatOpen(false);
+    setIsRoutePlanOpen(false);
   };
 
   const handleViewProfileClick = () => {
@@ -106,6 +110,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
     setDashboardOpen(false);
     setIsProfileSet(false);
     setIsNavOpen(false);
+    setIsRoutePlanOpen(false);
   };
 
   const handleLogoutClick = () => {
@@ -116,6 +121,16 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
 
   const handleChatClick = () => {
     setIsChatOpen(true);
+    setIsProfileSet(false);
+    setViewProfile(false);
+    setIsNavOpen(false);
+    setDashboardOpen(false);
+    setIsRoutePlanOpen(false);
+  }
+
+  const handleRoutePlanClick = () => {
+    setIsRoutePlanOpen(true);
+    setIsChatOpen(false);
     setIsProfileSet(false);
     setViewProfile(false);
     setIsNavOpen(false);
@@ -177,7 +192,7 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
             <li><button className="item-btn" onClick={handleViewProfileClick}>View Profile</button></li>
           )}
           <li><button className="item-btn" onClick={handleChatClick}>AI Assistant</button></li>
-          <li><button className="item-btn">Nearby Places</button></li>
+          <li><button className="item-btn" onClick={handleRoutePlanClick}>Route Planning</button></li>
         </ul>
         <div className="logout-btn-icon">
           <button className="logout-btn item-btn" onClick={handleLogoutClick}>Log Out</button>
@@ -206,6 +221,9 @@ const UserPage = ({ justLoggedIn, setJustLoggedIn, setIsUserLogged, setLoadSpinn
             setLoadSpinner={setLoadSpinner}
             token={token}
           />
+        }
+        {isRoutePlanOpen &&
+          <RoutePage />
         }
       </div>
 

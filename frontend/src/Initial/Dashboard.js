@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [districtPages, setDistrictPages] = useState({});
 
   // Fetch heritage places from backend on component mount
-  useEffect(() => {
+useEffect(() => {
     const fetchPlaces = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/places`);
@@ -122,9 +122,10 @@ const Dashboard = () => {
               }}
             >
               <option value="default">Filter By</option>
+              <option value="Fort">Forts</option>
               <option value="Temple">Temples</option>
               <option value="Palace">Palaces</option>
-              <option value="Memorial">Memorials</option>
+              <option value="Natural Landscape">Natural Landscapes</option>
             </select>
           </div>
         </div>
