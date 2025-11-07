@@ -1,0 +1,32 @@
+.image-gallery {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-gallery .thumb {
+  width: 160px;        /* bigger thumbs */
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.image-gallery .thumb:hover { transform: translateY(-4px) scale(1.03); }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+}
+.lightbox-img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}

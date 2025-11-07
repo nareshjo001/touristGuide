@@ -23,54 +23,73 @@ const Chatbot = ({ setAiData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLoading) return; // Don't submit while waiting for a response
+    if (isLoading) return;
 
-    // Add user message to chat
-    const userMessage = { role: "user", text: userPrompt };
+    const trimmedPrompt = userPrompt.trim();
+    if (!trimmedPrompt) return;
+
+    // Add user message
+    const userMessage = { role: "user", text: trimmedPrompt };
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
-    setUserPrompt(""); // Clear input immediately
+    setUserPrompt("");
+
+    // Add a loading placeholder message (we'll replace it later)
+    const loadingMessage = { role: "model", text: "Fetching related images..." };
+    setMessages((prev) => [...prev, loadingMessage]);
 
     try {
-      // --- This is the new AI integration ---
       const response = await fetch("http://localhost:5001/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: userPrompt,
-          userId: userId, // TODO: Pass a real user ID here
-          conversationId: conversationId // TODO: Pass a unique convo ID
+          message: trimmedPrompt,
+          userId: userId,
+          conversationId: conversationId
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const aiResponse = await response.json();
+      console.log("AI RESPONSE ===>", aiResponse);
 
-      // Add the real AI answer to the chat
-      const botMessage = { role: "model", text: aiResponse.answer };
-      setMessages((prev) => [...prev, botMessage]);
+      // Build array of image URLs from sources (if present)
+      const imageUrls = (aiResponse.sources || [])
+        .filter(s => s.imageUrl)
+        .map(s => s.imageUrl);
 
-      // Pass the retrieved sources to the parent component
-      // This will be a list of objects, e.g., [{ name: "Marina Beach", ... }]
+      // Build bot message with imageUrls (note the plural prop name)
+      const botMessage = {
+        role: "model",
+        text: aiResponse.answer || "Sorry, no answer available.",
+        imageUrls: imageUrls // <-- pass array (may be empty)
+      };
+
+      // Replace the LAST loading message with real response
+      setMessages(prev => {
+        // find last index of loading message to replace it
+        const lastLoadingIdx = [...prev].reverse().findIndex(m => m.role === "model" && m.text === "Fetching related images...");
+        if (lastLoadingIdx === -1) {
+          return [...prev, botMessage];
+        }
+        const idx = prev.length - 1 - lastLoadingIdx;
+        const newArr = prev.slice(0, idx).concat([botMessage]).concat(prev.slice(idx + 1));
+        return newArr;
+      });
+
       if (aiResponse.sources && Array.isArray(aiResponse.sources) && aiResponse.sources.length > 0) {
-        setAiData(aiResponse.sources); 
+        setAiData(aiResponse.sources);
       }
-      // --- End of new AI integration ---
 
     } catch (error) {
       console.error("Failed to fetch AI response:", error);
-      // Add an error message to the chat
       const errorMessage = { role: "model", text: "Sorry, I'm having trouble connecting. Please try again." };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="chatbot-container">
@@ -88,7 +107,12 @@ const Chatbot = ({ setAiData }) => {
       {/* Chat Body */}
       <div className="chat-body">
         {messages.map((msg, index) => (
-          <ChatMessage key={index} role={msg.role} text={msg.text} />
+          <ChatMessage
+            key={index}
+            role={msg.role}
+            text={msg.text}
+            imageUrls={msg.imageUrls || []} 
+          />
         ))}
       </div>
 
