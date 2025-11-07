@@ -223,33 +223,32 @@ def cosine_sim(a: np.ndarray, b: np.ndarray) -> float:
 # --- MODIFIED retrieve_local FUNCTION (with Relation Embedding) ---
 async def retrieve_local(query: str, k: int = 3, allow_wiki_fallback: bool = True):
     """
-    Hybrid local retrieval (using both embeddings)
+    Hybrid local retrieval (using both embeddings).
+    Returns list of source objects that include imageUrl when available.
     """
     global PLACES_CACHE
     if not PLACES_CACHE:
         print("Warning: PLACES_CACHE is empty. Seeding again...")
         await index_places()
         if not PLACES_CACHE:
-             print("Error: PLACES_CACHE is still empty after re-seeding.")
-             return []
+            print("Error: PLACES_CACHE is still empty after re-seeding.")
+            return []
 
+    # compute query embedding
     query_emb = np.array(await get_embedding(query), dtype=float)
 
     scored = []
     best_score = 0.0
 
     for place in PLACES_CACHE:
-        # main embedding
         place_emb = np.array(place.get("embedding", np.zeros_like(query_emb)))
         score_main = cosine_sim(query_emb, place_emb)
 
-        # relation embedding
-        rel_emb = place.get("relation_embedding") # <-- Use relation_embedding
+        rel_emb = place.get("relation_embedding")
         score_rel = 0.0
         if rel_emb is not None:
             score_rel = cosine_sim(query_emb, np.array(rel_emb))
 
-        # weighted hybrid score (like in the notebook)
         combined_score = 0.7 * score_main + 0.3 * score_rel
         scored.append((combined_score, place))
         best_score = max(best_score, combined_score)
@@ -264,12 +263,12 @@ async def retrieve_local(query: str, k: int = 3, allow_wiki_fallback: bool = Tru
             "full_text": place["full_text"],
             "category": place.get("category"),
             "location": place.get("location"),
-            "imageUrl": place.get("imageUrl"),
+            "imageUrl": place.get("imageUrl"),   # local DB imageUrl (may be None)
             "score": float(sc),
             "source": "localDB"
         })
 
-    # Wikipedia fallback (no changes)
+    # Wikipedia fallback: add 1 wiki result with imageUrl when needed
     if allow_wiki_fallback and (best_score < 0.65 or len(top_local) < k):
         try:
             search_results = await run_sync(wikipedia.search, query)
@@ -277,35 +276,52 @@ async def retrieve_local(query: str, k: int = 3, allow_wiki_fallback: bool = Tru
                 best_title = search_results[0]
                 try:
                     page = await run_sync(wikipedia.page, best_title, auto_suggest=False)
-                except wiki_exceptions.DisambiguationError as dis_e:
-                    print(f"⚠️ Wikipedia disambiguation error for '{best_title}'. Trying second result.")
+                except wiki_exceptions.DisambiguationError:
+                    # try second result if disambiguation
                     if len(search_results) > 1:
                         best_title = search_results[1]
                         page = await run_sync(wikipedia.page, best_title, auto_suggest=False)
                     else:
-                        print("No other wiki results to try.")
-                        return top_local
-                
-                wiki_text = page.summary or page.content[:2000]
-                
-                top_local.append({
-                    "id": f"wiki::{page.title}",
-                    "name": page.title,
-                    "full_text": wiki_text[:1200],
-                    "category": "Wikipedia",
-                    "score": 0.5,
-                    "source": "wikipedia"
-                })
-                print(f"✅ Wikipedia fallback added: {page.title}")
+                        page = None
+
+                if page:
+                    wiki_text = page.summary or (page.content[:2000] if hasattr(page, "content") else "")
+                    # try to pick a good image from page.images
+                    wiki_image = None
+                    images = []
+                    try:
+                        images = getattr(page, "images", []) or []
+                        for img_url in images:
+                            lower = img_url.lower()
+                            if lower.endswith((".jpg", ".jpeg", ".png")) and all(x not in lower for x in ("logo", "icon", "badge")):
+                                wiki_image = img_url
+                                break
+                        if not wiki_image and images:
+                            wiki_image = images[0]
+                    except Exception:
+                        wiki_image = None
+
+                    top_local.append({
+                        "id": f"wiki::{page.title}",
+                        "name": page.title,
+                        "full_text": wiki_text[:1200],
+                        "category": "Wikipedia",
+                        "score": 0.5,
+                        "source": "wikipedia",
+                        "imageUrl": wiki_image,   # <-- add wiki image here (may be None)
+                        "images": images
+                    })
+                    print(f"✅ Wikipedia fallback added: {page.title} (image: {bool(wiki_image)})")
             else:
                 print(f"⚠️ No Wikipedia results found for '{query}'.")
-        
         except wiki_exceptions.PageError:
-             print(f"⚠️ Wikipedia PageError: No page found for '{query}'.")
+            print(f"⚠️ Wikipedia PageError: No page found for '{query}'.")
         except Exception as e:
             print(f"Wikipedia error: {e}")
 
     return top_local
+
+
 # --- END OF MODIFICATION ---
 
 def _hash_text(text, voice="default", style="neutral"):
