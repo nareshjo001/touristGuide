@@ -66,6 +66,7 @@ This project serves both as a **tourism assistant** and a **cultural learning pl
 ---
 
 ## 👨‍💻 Author
-**Naresh**  
+**Naresh**
+**Hari Ragavendra**
 Full-Stack Developer | MERN | AI & Data Science
 
